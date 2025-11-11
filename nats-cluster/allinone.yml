@@ -1,0 +1,75 @@
+services:
+  # --- JetStream 节点 ---
+  n1:
+    image: nats:2.10
+    container_name: js1 
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./js1.conf:/etc/nats/nats.conf:ro
+      - ./data/js1:/data
+    ports:
+      - "4222:4222"   # 客户端连接
+      - "8222:8222"   # HTTP 监控
+      - "6222:6222"   # 集群内部通信
+
+  n2:
+    image: nats:2.10
+    container_name: js2
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./js2.conf:/etc/nats/nats.conf:ro
+      - ./data/js2:/data
+    ports:
+      - "4223:4222"
+      - "8223:8222"
+      - "6223:6222"
+
+  n3:
+    image: nats:2.10
+    container_name: js3
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./js3.conf:/etc/nats/nats.conf:ro
+      - ./data/js3:/data
+    ports:
+      - "4224:4222"
+      - "8224:8222"
+      - "6224:6222"
+
+  # --- 标准 NATS 节点 ---
+  n4:
+    image: nats:2.10
+    container_name: n1
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./nats1.conf:/etc/nats/nats.conf:ro
+    ports:
+      - "4225:4222"
+      - "8225:8222"
+      - "6225:6222"
+
+  n5:
+    image: nats:2.10
+    container_name: n2
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./nats2.conf:/etc/nats/nats.conf:ro
+    ports:
+      - "4226:4222"
+      - "8226:8222"
+      - "6226:6222"
+
+  n6:
+    image: nats:2.10
+    container_name: n3
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./nats3.conf:/etc/nats/nats.conf:ro
+    ports:
+      - "4227:4222"
+      - "8227:8222"
+      - "6227:6222"
+
+networks:
+  default:
+    name: nats-cluster

@@ -11,13 +11,16 @@ docker compose -f ./nats-cluster/allinone.yml up -d
 # 查看集群内的容器
 docker ps
 
-# 拉起测试容器环境
-docker run -it --rm \
-  --network nats-cluster \
-  natsio/nats-box:latest
-
-# 测试 NATS 集群
+# 拉起使用容器网络的容器环境进行测试
+docker run -it --rm --network nats-cluster natsio/nats-box:latest
 nats --server nats://js1:4222 --user admin --password admin server report jetstream
+
+# 拉起使用 host network 的容器环境进行测试
+docker run -it --rm --network host natsio/nats-box:latest
+nats context add local --server nats://localhost:4222,nats://localhost:4223,nats://localhost:4224,nats://localhost:4225,nats://localhost:4226,nats://localhost:4227
+nats context select local
+nats --user admin --password admin server report health
+nats --user admin --password admin server report jetstream
 
 # 销毁集群
 docker compose -f ./nats-cluster/allinone.yml down

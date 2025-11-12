@@ -8,9 +8,9 @@ services:
       - ./js1.conf:/etc/nats/nats.conf:ro
       - ./data/js1:/data
     ports:
-      - "4222:4222"   # 客户端连接
-      - "8222:8222"   # HTTP 监控
-      - "6222:6222"   # 集群内部通信
+      - "14222:4222"   # 客户端连接
+      - "18222:8222"   # HTTP 监控
+      - "16222:6222"   # 集群内部通信
 
   n2:
     image: nats:2.10
@@ -20,9 +20,9 @@ services:
       - ./js2.conf:/etc/nats/nats.conf:ro
       - ./data/js2:/data
     ports:
-      - "4223:4222"
-      - "8223:8222"
-      - "6223:6222"
+      - "14223:4222"
+      - "18223:8222"
+      - "16223:6222"
 
   n3:
     image: nats:2.10
@@ -32,9 +32,9 @@ services:
       - ./js3.conf:/etc/nats/nats.conf:ro
       - ./data/js3:/data
     ports:
-      - "4224:4222"
-      - "8224:8222"
-      - "6224:6222"
+      - "14224:4222"
+      - "18224:8222"
+      - "16224:6222"
 
   # --- 标准 NATS 节点 ---
   n4:
@@ -44,9 +44,9 @@ services:
     volumes:
       - ./nats1.conf:/etc/nats/nats.conf:ro
     ports:
-      - "4225:4222"
-      - "8225:8222"
-      - "6225:6222"
+      - "14225:4222"
+      - "18225:8222"
+      - "16225:6222"
 
   n5:
     image: nats:2.10
@@ -55,9 +55,9 @@ services:
     volumes:
       - ./nats2.conf:/etc/nats/nats.conf:ro
     ports:
-      - "4226:4222"
-      - "8226:8222"
-      - "6226:6222"
+      - "14226:4222"
+      - "18226:8222"
+      - "16226:6222"
 
   n6:
     image: nats:2.10
@@ -66,9 +66,9 @@ services:
     volumes:
       - ./nats3.conf:/etc/nats/nats.conf:ro
     ports:
-      - "4227:4222"
-      - "8227:8222"
-      - "6227:6222"
+      - "14227:4222"
+      - "18227:8222"
+      - "16227:6222"
 
 networks:
   default:

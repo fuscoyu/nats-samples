@@ -6,7 +6,7 @@ All in One 的 NATS 集群主要用于为研发和测试快速搭建一个 NATS 
 
 ```shell
 # 创建集群
-docker compose -f ./nats-cluster/allinone.yml up -d
+docker compose -f ./nats-cluster/allinone/allinone.yml up -d
 
 # 查看集群内的容器
 docker ps
@@ -23,5 +23,5 @@ nats --user admin --password admin server report health
 nats --user admin --password admin server report jetstream
 
 # 销毁集群
-docker compose -f ./nats-cluster/allinone.yml down
+docker compose -f ./nats-cluster/allinone/allinone.yml down
 ```

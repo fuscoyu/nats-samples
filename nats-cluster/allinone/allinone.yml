@@ -1,6 +1,6 @@
 services:
   # --- JetStream 节点 ---
-  n1:
+  js1:
     image: nats:2.10
     container_name: js1 
     command: ["-c", "/etc/nats/nats.conf"]
@@ -12,7 +12,7 @@ services:
       - "18222:8222"   # HTTP 监控
       - "16222:6222"   # 集群内部通信
 
-  n2:
+  js2:
     image: nats:2.10
     container_name: js2
     command: ["-c", "/etc/nats/nats.conf"]
@@ -24,7 +24,7 @@ services:
       - "18223:8222"
       - "16223:6222"
 
-  n3:
+  js3:
     image: nats:2.10
     container_name: js3
     command: ["-c", "/etc/nats/nats.conf"]
@@ -37,7 +37,7 @@ services:
       - "16224:6222"
 
   # --- 标准 NATS 节点 ---
-  n4:
+  n1:
     image: nats:2.10
     container_name: n1
     command: ["-c", "/etc/nats/nats.conf"]
@@ -48,7 +48,7 @@ services:
       - "18225:8222"
       - "16225:6222"
 
-  n5:
+  n2:
     image: nats:2.10
     container_name: n2
     command: ["-c", "/etc/nats/nats.conf"]
@@ -59,7 +59,7 @@ services:
       - "18226:8222"
       - "16226:6222"
 
-  n6:
+  n3:
     image: nats:2.10
     container_name: n3
     command: ["-c", "/etc/nats/nats.conf"]

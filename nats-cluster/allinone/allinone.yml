@@ -11,6 +11,11 @@ services:
       - "14222:4222"   # 客户端连接
       - "18222:8222"   # HTTP 监控
       - "16222:6222"   # 集群内部通信
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"     # 单个日志文件最大 20MB
+        max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
 
   js2:
     image: nats:2.10
@@ -23,6 +28,11 @@ services:
       - "14223:4222"
       - "18223:8222"
       - "16223:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"     # 单个日志文件最大 20MB
+        max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
 
   js3:
     image: nats:2.10
@@ -35,6 +45,11 @@ services:
       - "14224:4222"
       - "18224:8222"
       - "16224:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"     # 单个日志文件最大 20MB
+        max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
 
   # --- 标准 NATS 节点 ---
   n1:
@@ -47,6 +62,11 @@ services:
       - "14225:4222"
       - "18225:8222"
       - "16225:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"     # 单个日志文件最大 20MB
+        max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
 
   n2:
     image: nats:2.10
@@ -58,6 +78,11 @@ services:
       - "14226:4222"
       - "18226:8222"
       - "16226:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"     # 单个日志文件最大 20MB
+        max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
 
   n3:
     image: nats:2.10
@@ -69,6 +94,11 @@ services:
       - "14227:4222"
       - "18227:8222"
       - "16227:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"     # 单个日志文件最大 20MB
+        max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
 
 networks:
   default:

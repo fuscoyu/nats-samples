@@ -3,7 +3,7 @@ port: 4222
 
 accounts {
   $SYS {
-    users = [
+    users : [
       { user: "admin",
         pass: "admin"
       }

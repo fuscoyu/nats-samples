@@ -12,9 +12,9 @@ fi
 eval NODE_IP=\$${NODE^^}_IP
 
 generate_nats_routes() {
-  routes=""
-  # same node's JetStream container
+  routes="    # JetStream container of current node\n"
   routes+="    nats://${NODE_IP}:16222\n"
+  routes+="    # NATS container of other nodes\n"
   for n in node1 node2 node3; do
     ipvar="${n^^}_IP"
     eval ip=\$$ipvar
@@ -28,8 +28,7 @@ generate_nats_routes() {
 NATS_ROUTES=$(generate_nats_routes)
 
 generate_js_routes() {
-  routes=""
-  # JetStream containers on all nodes
+  routes+="    # JetStream container of other nodes\n"
   for n in node1 node2 node3; do
     ipvar="${n^^}_IP"
     eval ip=\$$ipvar
@@ -38,6 +37,7 @@ generate_js_routes() {
       routes+="    nats://${ip}:16222\n"
     fi
   done
+  routes+="    # NATS container of current node\n"
   # same node's NATS container
   routes+="    nats://${NODE_IP}:16223\n"
   echo -e "$routes"

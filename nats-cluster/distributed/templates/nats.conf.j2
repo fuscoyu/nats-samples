@@ -1,4 +1,4 @@
-server_name: n2-c1
+server_name: n{{ node.index }}-c1
 port: 4222
 
 accounts {
@@ -16,10 +16,12 @@ cluster {
   listen: 0.0.0.0:6222
   routes: [
     # JetStream container of current node
-    nats://192.168.0.12:16222
+    nats://{{ node.ip }}:{{ ports.jetstream }}
     # NATS container of other nodes
-    nats://192.168.0.11:16223
-    nats://192.168.0.13:16223
+{% for n, nd in nodes.items() %}
+{% if n != current_node %}    nats://{{ nd.ip }}:{{ ports.nats }}
+{% endif %}
+{% endfor %}
   ]
 }
 

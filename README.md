@@ -32,22 +32,36 @@ docker compose -f ./nats-cluster/allinone/allinone.yml down
 每台虚拟机都包含一个有持久化能力的 NATS JetStream 节点和一个无持久化能力的标准 NATS 节点。
 
 ```shell
-# 按实际情况修改 distributed/.env 中各节点的 IP
-NODE1_IP=192.168.0.11
-NODE2_IP=192.168.0.12
-NODE3_IP=192.168.0.13
+# 按实际情况修改 nats-cluster/distributed/config.yml 中各节点的 IP
+ports:
+  jetstream: 16222    # JetStream default (cluster) port
+  nats: 16223         # NATS default (cluster) port
+
+nodes:
+  node1:
+    ip: 192.168.0.11
+    jetstream:
+      max_mem_store: 1Gb
+      max_file_store: 10Gb
+  node2:
+    ip: 192.168.0.12
+    jetstream:
+      max_mem_store: 1Gb
+      max_file_store: 10Gb
+  node3:
+    ip: 192.168.0.13
+    jetstream:
+      max_mem_store: 1Gb
+      max_file_store: 10Gb
 
 # 重新生成所有节点 NATS 持久化和非持久化节点部署的配置
-cd distributed 
-make all
+cd nats-cluster
+pip install -r requirements.txt
+python3 generate.py all
 
 # 重新生成指定节点 NATS 持久化和非持久化节点部署的配置
-cd distributed 
-make node1 # or node2, node3 
 
 # 清除所有 NATS 节点配置
-cd distributed 
-make clean
 ```
 
 ```shell

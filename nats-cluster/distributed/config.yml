@@ -1,0 +1,21 @@
+# nats-cluster/distributed/config.yml
+ports:
+  jetstream: 16222    # JetStream default (cluster) port
+  nats: 16223         # NATS default (cluster) port
+
+nodes:
+  node1:
+    ip: 192.168.0.11
+    jetstream:
+      max_mem_store: 1Gb
+      max_file_store: 10Gb
+  node2:
+    ip: 192.168.0.12
+    jetstream:
+      max_mem_store: 1Gb
+      max_file_store: 10Gb
+  node3:
+    ip: 192.168.0.13
+    jetstream:
+      max_mem_store: 1Gb
+      max_file_store: 10Gb

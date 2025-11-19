@@ -8,7 +8,7 @@ services:
       - ./data/js1:/data
     ports:
       - "14222:4222"
-      - "16222:6222"
+      - "{{ ports.jetstream }}:6222"
       - "18222:8222"
     restart: unless-stopped
     logging:
@@ -25,7 +25,7 @@ services:
       - ./nats1.conf:/etc/nats/nats.conf:ro
     ports:
       - "14223:4222"
-      - "16223:6222"
+      - "{{ ports.nats }}:6222"
       - "18223:8222"
     restart: unless-stopped
     logging:

@@ -1,4 +1,4 @@
-server_name : js3-c1
+server_name : js{{ node.index }}-c1
 port: 4222
 
 accounts {
@@ -13,8 +13,8 @@ accounts {
 
 jetstream {
   store_dir: /data/jetstream
-  max_mem_store: 1Gb
-  max_file_store: 10Gb
+  max_mem_store: {{ node.jetstream.max_mem_store }}
+  max_file_store: {{ node.jetstream.max_file_store }}
 }
 
 cluster {
@@ -22,10 +22,12 @@ cluster {
   listen: 0.0.0.0:6222
   routes: [
     # JetStream container of other nodes
-    nats://192.168.0.11:16222
-    nats://192.168.0.12:16222
+{% for n, nd in nodes.items() %}
+{% if n != current_node %}    nats://{{ nd.ip }}:{{ ports.jetstream }}
+{% endif %}
+{% endfor %}
     # NATS container of current node
-    nats://192.168.0.13:16223
+    nats://{{ node.ip }}:{{ ports.nats }}
   ]
 }
 

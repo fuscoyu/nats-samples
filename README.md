@@ -13,7 +13,7 @@ docker ps
 
 # 拉起使用容器网络的容器环境进行测试
 docker run -it --rm --network nats-cluster natsio/nats-box:latest
-nats --server nats://js1:14222 --user admin --password admin server report jetstream
+nats --server nats://js1:4222 --user admin --password admin server report jetstream
 
 # 拉起使用 host network 的容器环境进行测试
 docker run -it --rm --network host natsio/nats-box:latest

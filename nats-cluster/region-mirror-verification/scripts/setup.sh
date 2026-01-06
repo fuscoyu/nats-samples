@@ -19,8 +19,8 @@ ZONE_B_SERVERS="nats://localhost:15232,nats://localhost:15233,nats://localhost:1
 ZONE_A_CONTAINER="js1-zone-a:4222"
 ZONE_B_CONTAINER="js1-zone-b:4222"
 
-# Stream 名称
-STREAM_NAME="EVENTS.REGION"
+# Stream 名称（不能包含点号）
+STREAM_NAME="EVENTS_REGION"
 SUBJECT="events.region.>"
 
 echo -e "${GREEN}=== Region Mirror/Source 验证方案 - Setup ===${NC}"

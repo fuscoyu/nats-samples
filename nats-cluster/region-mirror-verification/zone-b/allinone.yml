@@ -1,0 +1,58 @@
+services:
+  # --- Zone B JetStream 节点 ---
+  js1-zone-b:
+    image: nats:2.10
+    container_name: js1-zone-b 
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./js1.conf:/etc/nats/nats.conf:ro
+      - ./data/js1:/data
+    ports:
+      - "15232:4222"   # 客户端连接
+      - "19232:8222"   # HTTP 监控
+      - "17232:6222"   # 集群内部通信
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"     # 单个日志文件最大 20MB
+        max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
+
+  js2-zone-b:
+    image: nats:2.10
+    container_name: js2-zone-b
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./js2.conf:/etc/nats/nats.conf:ro
+      - ./data/js2:/data
+    ports:
+      - "15233:4222"
+      - "19233:8222"
+      - "17233:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"     # 单个日志文件最大 20MB
+        max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
+
+  js3-zone-b:
+    image: nats:2.10
+    container_name: js3-zone-b
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./js3.conf:/etc/nats/nats.conf:ro
+      - ./data/js3:/data
+    ports:
+      - "15234:4222"
+      - "19234:8222"
+      - "17234:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"     # 单个日志文件最大 20MB
+        max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
+
+networks:
+  default:
+    name: region-mirror-network
+    external: true
+

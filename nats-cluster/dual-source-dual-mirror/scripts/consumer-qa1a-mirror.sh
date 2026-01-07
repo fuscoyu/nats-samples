@@ -15,8 +15,7 @@ NC='\033[0m' # No Color
 ZONE_QA1A_SERVERS="nats://js1-qa1a:4222,nats://js2-qa1a:4222,nats://js3-qa1a:4222"
 
 # 使用 nats-box 容器运行 NATS CLI
-NATS_BOX_IMAGE="natsio/nats-box:latest"
-NATS_CMD="docker run --rm -i --network dual-source-dual-mirror-network $NATS_BOX_IMAGE nats"
+NATS_CMD="docker exec -i nats-box-qa1a nats"
 
 # Stream 和 Consumer
 STREAM_NAME="qa_mirror_qa1b"
@@ -31,16 +30,15 @@ echo -e "Consumer: ${CONSUMER_NAME}"
 echo -e "输出文件: ${OUTPUT_FILE}"
 echo ""
 
-# 检查 NATS CLI 是否可用
+# 检查 Docker 是否可用
 if ! command -v docker &> /dev/null; then
     echo -e "${RED}错误: docker 未安装。请安装 Docker。${NC}"
     # 继续尝试
 fi
 
-# 检查 Zone qa1a 连接
-if ! docker run --rm --network dual-source-dual-mirror-network $NATS_BOX_IMAGE nats --server "$ZONE_ &> /dev/null; then
-    echo -e "${RED}警告: 无法连接到 Zone qa1a。请确保 Zone qa1a 已启动。${NC}"
-    # 继续尝试
+# 检查 Zone qa1a 连接（尝试列出streams来验证连接）
+if ! docker exec nats-box-qa1a nats --server "$ZONE_QA1A_SERVERS" stream ls &> /dev/null; then
+    echo -e "${YELLOW}警告: 无法连接到 Zone qa1a，但继续尝试消费...${NC}"
 fi
 
 # 创建 Consumer（如果不存在）

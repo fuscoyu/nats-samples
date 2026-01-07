@@ -51,6 +51,19 @@ services:
         max-size: "20m"     # 单个日志文件最大 20MB
         max-file: "5"       # 最多保留 5 个文件（共 ~100MB）
 
+  # --- Zone qa1b nats-box 服务 ---
+  nats-box-qa1b:
+    image: natsio/nats-box:latest
+    container_name: nats-box-qa1b
+    command: ["sh", "-c", "while true; do sleep 30; done"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nats", "--version"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
 networks:
   default:
     name: dual-source-dual-mirror-network

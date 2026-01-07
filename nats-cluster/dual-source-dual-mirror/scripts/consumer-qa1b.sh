@@ -15,8 +15,7 @@ NC='\033[0m' # No Color
 ZONE_QA1B_SERVERS="nats://js1-qa1b:4222,nats://js2-qa1b:4222,nats://js3-qa1b:4222"
 
 # 使用 nats-box 容器运行 NATS CLI
-NATS_BOX_IMAGE="natsio/nats-box:latest"
-NATS_CMD="docker run --rm -i --network dual-source-dual-mirror-network $NATS_BOX_IMAGE nats"
+NATS_CMD="docker exec -i nats-box-qa1b nats"
 
 # Stream 和 Consumer
 STREAM_NAME="qa"
@@ -38,9 +37,8 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # 检查 Zone qa1b 连接
-if ! docker run --rm --network dual-source-dual-mirror-network $NATS_BOX_IMAGE nats --server "$ZONE_ &> /dev/null; then
-    echo -e "${RED}警告: 无法连接到 Zone qa1b。请确保 Zone qa1b 已启动。${NC}"
-    # 继续尝试
+if ! docker exec nats-box-qa1b nats --server "$ZONE_QA1B_SERVERS" stream ls &> /dev/null; then
+    echo -e "${YELLOW}警告: 无法连接到 Zone qa1b，但继续尝试消费...${NC}"
 fi
 
 # 创建 Consumer（如果不存在）

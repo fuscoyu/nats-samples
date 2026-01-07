@@ -32,18 +32,13 @@ SUBJECT_QA1B="events.qa.qa1b.>"
 echo -e "${GREEN}=== 双Source双Mirror验证方案 - Setup ===${NC}"
 
 # 使用 nats-box 容器运行 NATS CLI
-NATS_BOX_IMAGE="natsio/nats-box:latest"
-NATS_CMD="docker run --rm --network dual-source-dual-mirror-network $NATS_BOX_IMAGE nats"
+NATS_CMD="docker exec -i nats-box-qa1a nats"
 
 # 检查 Docker 是否可用
 if ! command -v docker &> /dev/null; then
     echo -e "${RED}错误: docker 未安装。请安装 Docker。${NC}"
     exit 1
 fi
-
-# 拉取 nats-box 镜像（如果需要）
-echo -e "${YELLOW}检查 nats-box 镜像...${NC}"
-docker pull "$NATS_BOX_IMAGE" > /dev/null 2>&1 || true
 
 # 等待 Zone qa1a 和 Zone qa1b 启动
 echo -e "${YELLOW}等待 Zone qa1a 和 Zone qa1b 启动...${NC}"
@@ -140,7 +135,7 @@ EOF
 )
 
 # 通过stdin传递配置创建 Mirror Stream
-echo "$MIRROR_QA1B_CONFIG" | docker run --rm -i --network dual-source-dual-mirror-network $NATS_BOX_IMAGE nats --server "$ZONE_QA1A_SERVERS" stream add "$MIRROR_QA1B_NAME" --config /dev/stdin --defaults
+echo "$MIRROR_QA1B_CONFIG" | docker exec -i nats-box-qa1a nats --server "$ZONE_QA1A_SERVERS" stream add "$MIRROR_QA1B_NAME" --config /dev/stdin --defaults
 
 echo -e "${GREEN}Zone qa1a Mirror Stream 创建成功${NC}"
 
@@ -176,7 +171,7 @@ EOF
 )
 
 # 通过stdin传递配置创建 Mirror Stream
-echo "$MIRROR_QA1A_CONFIG" | docker run --rm -i --network dual-source-dual-mirror-network $NATS_BOX_IMAGE nats --server "$ZONE_QA1B_SERVERS" stream add "$MIRROR_QA1A_NAME" --config /dev/stdin --defaults
+echo "$MIRROR_QA1A_CONFIG" | docker exec -i nats-box-qa1b nats --server "$ZONE_QA1B_SERVERS" stream add "$MIRROR_QA1A_NAME" --config /dev/stdin --defaults
 
 echo -e "${GREEN}Zone qa1b Mirror Stream 创建成功${NC}"
 
@@ -200,3 +195,14 @@ $NATS_CMD --server "$ZONE_QA1B_SERVERS" stream info "$MIRROR_QA1A_NAME" || echo 
 
 echo -e "${GREEN}=== Setup 完成 ===${NC}"
 
+# 验证 Mirror 同步状态
+echo -e "${GREEN}=== Mirror 同步状态验证 ===${NC}"
+sleep 2
+
+echo -e "${YELLOW}Zone qa1a -> Zone qa1b Mirror 同步状态:${NC}"
+$NATS_CMD --server "$ZONE_QA1B_SERVERS" stream info "$MIRROR_QA1A_NAME" 2>&1 || echo "Mirror 不存在或无法访问"
+
+echo -e "${YELLOW}Zone qa1b -> Zone qa1a Mirror 同步状态:${NC}"
+$NATS_CMD --server "$ZONE_QA1A_SERVERS" stream info "$MIRROR_QA1B_NAME" 2>&1 || echo "Mirror 不存在或无法访问"
+
+echo -e "${GREEN}=== 验证完成 ===${NC}"

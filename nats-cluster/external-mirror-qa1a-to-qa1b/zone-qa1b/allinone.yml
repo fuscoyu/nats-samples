@@ -1,0 +1,62 @@
+services:
+  js1-qa1b:
+    image: nats:2.10
+    container_name: js1-qa1b
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./js1.conf:/etc/nats/nats.conf:ro
+      - ./data/js1:/data
+    ports:
+      - "16232:4222"
+      - "18232:8222"
+      - "17232:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  js2-qa1b:
+    image: nats:2.10
+    container_name: js2-qa1b
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./js2.conf:/etc/nats/nats.conf:ro
+      - ./data/js2:/data
+    ports:
+      - "16233:4222"
+      - "18233:8222"
+      - "17233:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  js3-qa1b:
+    image: nats:2.10
+    container_name: js3-qa1b
+    command: ["-c", "/etc/nats/nats.conf"]
+    volumes:
+      - ./js3.conf:/etc/nats/nats.conf:ro
+      - ./data/js3:/data
+    ports:
+      - "16234:4222"
+      - "18234:8222"
+      - "17234:6222"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  nats-box-qa1b:
+    image: natsio/nats-box:latest
+    container_name: nats-box-qa1b
+    command: ["sh", "-c", "while true; do sleep 30; done"]
+    restart: unless-stopped
+
+networks:
+  default:
+    name: external-mirror-network
+    external: true

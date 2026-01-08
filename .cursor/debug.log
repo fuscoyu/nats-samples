@@ -1,0 +1,490 @@
+{"timestamp":1767861124000,"location":"setup-mirror.sh","message":"Creating source stream on qa1a","hypothesisId":"B","data":{"stream":"qa"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861126000,"location":"setup-mirror.sh","message":"Creating mirror stream on qa1b","hypothesisId":"A","data":{"mirror_stream":"qa_mirror_qa1a","source_stream":"qa","external_api":"nats://app:app@js1-qa1a:4222"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861126000,"location":"setup-mirror.sh","message":"Stream add output","hypothesisId":"A","data":{"output":"Stream qa_mirror_qa1a was created
+
+Information for Stream qa_mirror_qa1a created 2026-01-08 08:32:06
+
+                Replicas: 3
+                 Storage: File
+
+Options:
+
+               Retention: Limits
+         Acknowledgments: true
+          Discard Policy: Old
+        Duplicate Window: 0s
+    Allows Batch Publish: false
+         Allows Counters: false
+       Allows Msg Delete: true
+  Allows Per-Message TTL: false
+            Allows Purge: true
+        Allows Schedules: false
+          Allows Rollups: false
+
+Limits:
+
+        Maximum Messages: unlimited
+     Maximum Per Subject: unlimited
+           Maximum Bytes: unlimited
+             Maximum Age: unlimited
+    Maximum Message Size: unlimited
+       Maximum Consumers: unlimited
+
+Replication:
+
+                  Mirror: qa, API Prefix: nats://app:app@js1-qa1a:4222
+
+Cluster Information:
+
+                    Name: qa1b
+           Cluster Group: S-R3F-4erndoRI
+                  Leader: js3-qa1b
+                 Replica: js1-qa1b, current, seen 339µs ago
+                 Replica: js2-qa1b, current, seen 882µs ago
+
+Mirror Information:
+
+             Stream Name: qa
+                     Lag: 0
+               Last Seen: never
+         Ext. API Prefix: nats://app:app@js1-qa1a:4222
+
+State:
+
+                Messages: 0
+                   Bytes: 0 B
+          First Sequence: 0
+           Last Sequence: 0
+        Active Consumers: 0"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861129000,"location":"setup-mirror.sh","message":"Source stream info","hypothesisId":"C","data":{"info":{
+  "config": {
+    "name": "qa",
+    "subjects": [
+      "events.qa.qa1a.\u003e"
+    ],
+    "retention": "limits",
+    "max_consumers": -1,
+    "max_msgs_per_subject": -1,
+    "max_msgs": -1,
+    "max_bytes": -1,
+    "max_age": 0,
+    "max_msg_size": -1,
+    "storage": "file",
+    "discard": "old",
+    "num_replicas": 3,
+    "duplicate_window": 120000000000,
+    "sealed": false,
+    "deny_delete": false,
+    "deny_purge": false,
+    "allow_rollup_hdrs": false,
+    "allow_direct": true,
+    "mirror_direct": false,
+    "consumer_limits": {}
+  },
+  "created": "2026-01-08T08:32:04.540163417Z",
+  "state": {
+    "messages": 0,
+    "bytes": 0,
+    "first_seq": 0,
+    "first_ts": "0001-01-01T00:00:00Z",
+    "last_seq": 0,
+    "last_ts": "0001-01-01T00:00:00Z",
+    "consumer_count": 0
+  },
+  "cluster": {
+    "name": "qa1a",
+    "raft_group": "S-R3F-cgGLcJeB",
+    "leader": "js3-qa1a",
+    "replicas": [
+      {
+        "name": "js1-qa1a",
+        "current": true,
+        "active": 580689940
+      },
+      {
+        "name": "js2-qa1a",
+        "current": true,
+        "active": 580842357
+      }
+    ]
+  },
+  "ts": "2026-01-08T08:32:09.189691171Z"
+}},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861129000,"location":"setup-mirror.sh","message":"Mirror stream info","hypothesisId":"A","data":{"info":{
+  "config": {
+    "name": "qa_mirror_qa1a",
+    "retention": "limits",
+    "max_consumers": -1,
+    "max_msgs_per_subject": -1,
+    "max_msgs": -1,
+    "max_bytes": -1,
+    "max_age": 0,
+    "max_msg_size": -1,
+    "storage": "file",
+    "discard": "old",
+    "num_replicas": 3,
+    "mirror": {
+      "name": "qa",
+      "external": {
+        "api": "nats://app:app@js1-qa1a:4222",
+        "deliver": ""
+      }
+    },
+    "sealed": false,
+    "deny_delete": false,
+    "deny_purge": false,
+    "allow_rollup_hdrs": false,
+    "allow_direct": false,
+    "mirror_direct": false,
+    "consumer_limits": {}
+  },
+  "created": "2026-01-08T08:32:06.916915379Z",
+  "state": {
+    "messages": 0,
+    "bytes": 0,
+    "first_seq": 0,
+    "first_ts": "0001-01-01T00:00:00Z",
+    "last_seq": 0,
+    "last_ts": "0001-01-01T00:00:00Z",
+    "consumer_count": 0
+  },
+  "cluster": {
+    "name": "qa1b",
+    "raft_group": "S-R3F-4erndoRI",
+    "leader": "js3-qa1b",
+    "replicas": [
+      {
+        "name": "js1-qa1b",
+        "current": true,
+        "active": 364012037
+      },
+      {
+        "name": "js2-qa1b",
+        "current": true,
+        "active": 363946370
+      }
+    ]
+  },
+  "mirror": {
+    "name": "qa",
+    "external": {
+      "api": "nats://app:app@js1-qa1a:4222",
+      "deliver": ""
+    },
+    "lag": 0,
+    "active": -1
+  },
+  "ts": "2026-01-08T08:32:09.365678128Z"
+}},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861129000,"location":"setup-mirror.sh","message":"NATS js1-qa1b logs","hypothesisId":"D","data":{"logs":"[1] 2026/01/08 08:31:58.888407 [INF] 10.89.2.8:51670 - rid:9 - Route connection created\n[1] 2026/01/08 08:31:58.893245 [INF] 10.89.2.9:43276 - rid:10 - Route connection created\n[1] 2026/01/08 08:31:58.893483 [INF] 10.89.2.9:43278 - rid:11 - Route connection created\n[1] 2026/01/08 08:31:58.894258 [INF] 10.89.2.9:6222 - rid:12 - Route connection created\n[1] 2026/01/08 08:31:58.952964 [INF] 10.89.2.9:6222 - rid:13 - Route connection created\n[1] 2026/01/08 08:31:58.959047 [INF] 10.89.2.8:51682 - rid:14 - Route connection created\n[1] 2026/01/08 08:31:58.970143 [INF] 10.89.2.9:43294 - rid:15 - Route connection created\n[1] 2026/01/08 08:31:58.970499 [INF] 10.89.2.9:43294 - rid:15 - Router connection closed: Client Closed\n[1] 2026/01/08 08:31:58.977028 [WRN] Waiting for routing to be established...\n[1] 2026/01/08 08:31:58.977064 [WRN] JetStream has not established contact with a meta leader\n[1] 2026/01/08 08:31:59.008970 [INF] 10.89.2.8:51696 - rid:16 - Route connection created\n[1] 2026/01/08 08:31:59.446165 [INF] JetStream cluster new metadata leader: js2-qa1b/qa1b\n[1] 2026/01/08 08:31:59.878974 [INF] 10.89.2.8:6222 - rid:17 - Route connection created\n[1] 2026/01/08 08:31:59.878974 [INF] 10.89.2.9:6222 - rid:19 - Route connection created\n[1] 2026/01/08 08:31:59.878979 [INF] 10.89.2.9:6222 - rid:18 - Route connection created\n[1] 2026/01/08 08:31:59.879068 [INF] 10.89.2.8:6222 - rid:20 - Route connection created\n[1] 2026/01/08 08:31:59.879468 [INF] 10.89.2.8:6222 - rid:17 - Router connection closed: Duplicate Route\n[1] 2026/01/08 08:31:59.879593 [INF] 10.89.2.9:6222 - rid:19 - Router connection closed: Duplicate Route\n[1] 2026/01/08 08:31:59.879644 [INF] 10.89.2.8:6222 - rid:20 - Router connection closed: Duplicate Route\n[1] 2026/01/08 08:31:59.879813 [INF] 10.89.2.9:6222 - rid:18 - Router connection closed: Duplicate Route\n"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861129000,"location":"producer.sh","message":"Starting to send messages","hypothesisId":"B","data":{"count":20},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861134000,"location":"producer.sh","message":"Finished sending messages","hypothesisId":"B","data":{"count":20},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861134000,"location":"verify.sh","message":"Source stream info (verify)","hypothesisId":"C","data":{"info":{
+  "config": {
+    "name": "qa",
+    "subjects": [
+      "events.qa.qa1a.\u003e"
+    ],
+    "retention": "limits",
+    "max_consumers": -1,
+    "max_msgs_per_subject": -1,
+    "max_msgs": -1,
+    "max_bytes": -1,
+    "max_age": 0,
+    "max_msg_size": -1,
+    "storage": "file",
+    "discard": "old",
+    "num_replicas": 3,
+    "duplicate_window": 120000000000,
+    "sealed": false,
+    "deny_delete": false,
+    "deny_purge": false,
+    "allow_rollup_hdrs": false,
+    "allow_direct": true,
+    "mirror_direct": false,
+    "consumer_limits": {}
+  },
+  "created": "2026-01-08T08:32:04.540163417Z",
+  "state": {
+    "messages": 20,
+    "bytes": 1551,
+    "first_seq": 1,
+    "first_ts": "2026-01-08T08:32:09.612825989Z",
+    "last_seq": 20,
+    "last_ts": "2026-01-08T08:32:14.093895588Z",
+    "num_subjects": 1,
+    "consumer_count": 0
+  },
+  "cluster": {
+    "name": "qa1a",
+    "raft_group": "S-R3F-cgGLcJeB",
+    "leader": "js3-qa1a",
+    "replicas": [
+      {
+        "name": "js1-qa1a",
+        "current": true,
+        "active": 928473116
+      },
+      {
+        "name": "js2-qa1a",
+        "current": true,
+        "active": 928467116
+      }
+    ]
+  },
+  "ts": "2026-01-08T08:32:15.023565921Z"
+}},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861135000,"location":"verify.sh","message":"Mirror stream info (verify)","hypothesisId":"A","data":{"info":{
+  "config": {
+    "name": "qa_mirror_qa1a",
+    "retention": "limits",
+    "max_consumers": -1,
+    "max_msgs_per_subject": -1,
+    "max_msgs": -1,
+    "max_bytes": -1,
+    "max_age": 0,
+    "max_msg_size": -1,
+    "storage": "file",
+    "discard": "old",
+    "num_replicas": 3,
+    "mirror": {
+      "name": "qa",
+      "external": {
+        "api": "nats://app:app@js1-qa1a:4222",
+        "deliver": ""
+      }
+    },
+    "sealed": false,
+    "deny_delete": false,
+    "deny_purge": false,
+    "allow_rollup_hdrs": false,
+    "allow_direct": false,
+    "mirror_direct": false,
+    "consumer_limits": {}
+  },
+  "created": "2026-01-08T08:32:06.916915379Z",
+  "state": {
+    "messages": 0,
+    "bytes": 0,
+    "first_seq": 0,
+    "first_ts": "0001-01-01T00:00:00Z",
+    "last_seq": 0,
+    "last_ts": "0001-01-01T00:00:00Z",
+    "consumer_count": 0
+  },
+  "cluster": {
+    "name": "qa1b",
+    "raft_group": "S-R3F-4erndoRI",
+    "leader": "js3-qa1b",
+    "replicas": [
+      {
+        "name": "js1-qa1b",
+        "current": true,
+        "active": 159895763
+      },
+      {
+        "name": "js2-qa1b",
+        "current": true,
+        "active": 159853638
+      }
+    ]
+  },
+  "mirror": {
+    "name": "qa",
+    "external": {
+      "api": "nats://app:app@js1-qa1a:4222",
+      "deliver": ""
+    },
+    "lag": 0,
+    "active": -1
+  },
+  "ts": "2026-01-08T08:32:15.161701118Z"
+}},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861135000,"location":"verify.sh","message":"NATS js1-qa1b logs (verify)","hypothesisId":"D","data":{"logs":"[1] 2026/01/08 08:31:58.861760 [INF]   Node:     oFFp9cuF\n[1] 2026/01/08 08:31:58.861761 [INF]   ID:       NDEBP72TUUEJRCZ7RAHPCFXZPELA4LJVX6AVOVDD4QJYAWIBLUSJ4NHG\n[1] 2026/01/08 08:31:58.861762 [WRN] Plaintext passwords detected, use nkeys or bcrypt\n[1] 2026/01/08 08:31:58.861765 [INF] Using configuration file: /etc/nats/nats.conf\n[1] 2026/01/08 08:31:58.862175 [INF] Starting http monitor on 0.0.0.0:8222\n[1] 2026/01/08 08:31:58.862233 [INF] Starting JetStream\n[1] 2026/01/08 08:31:58.864604 [INF]     _ ___ _____ ___ _____ ___ ___   _   __  __\n[1] 2026/01/08 08:31:58.864615 [INF]  _ | | __|_   _/ __|_   _| _ \\ __| /_\\ |  \\/  |\n[1] 2026/01/08 08:31:58.864616 [INF] | || | _|  | | \\__ \\ | | |   / _| / _ \\| |\\/| |\n[1] 2026/01/08 08:31:58.864616 [INF]  \\__/|___| |_| |___/ |_| |_|_\\___/_/ \\_\\_|  |_|\n[1] 2026/01/08 08:31:58.864617 [INF] \n[1] 2026/01/08 08:31:58.864617 [INF]          https://docs.nats.io/jetstream\n[1] 2026/01/08 08:31:58.864618 [INF] \n[1] 2026/01/08 08:31:58.864618 [INF] ---------------- JETSTREAM ----------------\n[1] 2026/01/08 08:31:58.864622 [INF]   Max Memory:      1.00 GB\n[1] 2026/01/08 08:31:58.864623 [INF]   Max Storage:     10.00 GB\n[1] 2026/01/08 08:31:58.864624 [INF]   Store Directory: \"/data/jetstream/jetstream\"\n[1] 2026/01/08 08:31:58.864624 [INF] -------------------------------------------\n[1] 2026/01/08 08:31:58.867947 [INF] Starting JetStream cluster\n[1] 2026/01/08 08:31:58.867955 [INF] Creating JetStream metadata controller\n[1] 2026/01/08 08:31:58.874139 [INF] JetStream cluster bootstrapping\n[1] 2026/01/08 08:31:58.876316 [INF] Listening for client connections on 0.0.0.0:4222\n[1] 2026/01/08 08:31:58.876422 [INF] Server is ready\n[1] 2026/01/08 08:31:58.876458 [INF] Cluster name is qa1b\n[1] 2026/01/08 08:31:58.876558 [INF] Listening for route connections on 0.0.0.0:6222\n[1] 2026/01/08 08:31:58.877486 [ERR] Error trying to connect to route (attempt 1): dial tcp 10.89.2.8:6222: connect: connection refused\n[1] 2026/01/08 08:31:58.877611 [ERR] Error trying to connect to route (attempt 1): dial tcp 10.89.2.8:6222: connect: connection refused\n[1] 2026/01/08 08:31:58.877725 [ERR] Error trying to connect to route (attempt 1): dial tcp 10.89.2.9:6222: connect: connection refused\n[1] 2026/01/08 08:31:58.877882 [ERR] Error trying to connect to route (attempt 1): dial tcp 10.89.2.9:6222: connect: connection refused\n[1] 2026/01/08 08:31:58.888264 [INF] 10.89.2.8:51672 - rid:8 - Route connection created\n[1] 2026/01/08 08:31:58.888407 [INF] 10.89.2.8:51670 - rid:9 - Route connection created\n[1] 2026/01/08 08:31:58.893245 [INF] 10.89.2.9:43276 - rid:10 - Route connection created\n[1] 2026/01/08 08:31:58.893483 [INF] 10.89.2.9:43278 - rid:11 - Route connection created\n[1] 2026/01/08 08:31:58.894258 [INF] 10.89.2.9:6222 - rid:12 - Route connection created\n[1] 2026/01/08 08:31:58.952964 [INF] 10.89.2.9:6222 - rid:13 - Route connection created\n[1] 2026/01/08 08:31:58.959047 [INF] 10.89.2.8:51682 - rid:14 - Route connection created\n[1] 2026/01/08 08:31:58.970143 [INF] 10.89.2.9:43294 - rid:15 - Route connection created\n[1] 2026/01/08 08:31:58.970499 [INF] 10.89.2.9:43294 - rid:15 - Router connection closed: Client Closed\n[1] 2026/01/08 08:31:58.977028 [WRN] Waiting for routing to be established...\n[1] 2026/01/08 08:31:58.977064 [WRN] JetStream has not established contact with a meta leader\n[1] 2026/01/08 08:31:59.008970 [INF] 10.89.2.8:51696 - rid:16 - Route connection created\n[1] 2026/01/08 08:31:59.446165 [INF] JetStream cluster new metadata leader: js2-qa1b/qa1b\n[1] 2026/01/08 08:31:59.878974 [INF] 10.89.2.8:6222 - rid:17 - Route connection created\n[1] 2026/01/08 08:31:59.878974 [INF] 10.89.2.9:6222 - rid:19 - Route connection created\n[1] 2026/01/08 08:31:59.878979 [INF] 10.89.2.9:6222 - rid:18 - Route connection created\n[1] 2026/01/08 08:31:59.879068 [INF] 10.89.2.8:6222 - rid:20 - Route connection created\n[1] 2026/01/08 08:31:59.879468 [INF] 10.89.2.8:6222 - rid:17 - Router connection closed: Duplicate Route\n[1] 2026/01/08 08:31:59.879593 [INF] 10.89.2.9:6222 - rid:19 - Router connection closed: Duplicate Route\n[1] 2026/01/08 08:31:59.879644 [INF] 10.89.2.8:6222 - rid:20 - Router connection closed: Duplicate Route\n[1] 2026/01/08 08:31:59.879813 [INF] 10.89.2.9:6222 - rid:18 - Router connection closed: Duplicate Route\n"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861836000,"location":"setup-mirror.sh","message":"Creating source stream on qa1a","hypothesisId":"B","data":{"stream":"qa"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861838000,"location":"setup-mirror.sh","message":"Creating mirror stream on qa1b","hypothesisId":"A","data":{"mirror_stream":"qa_mirror_qa1a","source_stream":"qa","external_api":"nats://app:app@js1-qa1a:4222"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861859000,"location":"setup-mirror.sh","message":"Creating source stream on qa1a","hypothesisId":"B","data":{"stream":"qa"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861861000,"location":"setup-mirror.sh","message":"Creating mirror stream on qa1b","hypothesisId":"A","data":{"mirror_stream":"qa_mirror_qa1a","source_stream":"qa","external_api":"nats://app:app@js1-qa1a:4222"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861909000,"location":"setup-mirror.sh","message":"Creating source stream on qa1a","hypothesisId":"B","data":{"stream":"qa"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767861911000,"location":"setup-mirror.sh","message":"Creating mirror stream on qa1b","hypothesisId":"A","data":{"mirror_stream":"qa_mirror_qa1a","source_stream":"qa","external_api":"nats://app:app@js1-qa1a:4222"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767862019000,"location":"setup-mirror.sh","message":"Creating source stream on qa1a","hypothesisId":"B","data":{"stream":"qa"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767862022000,"location":"setup-mirror.sh","message":"Creating mirror stream on qa1b","hypothesisId":"A","data":{"mirror_stream":"qa_mirror_qa1a","source_stream":"qa","external_api":"nats://app:app@js1-qa1a:4222"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767862022000,"location":"setup-mirror.sh","message":"Stream add output","hypothesisId":"A","data":{"output":"Stream qa_mirror_qa1a was created
+
+Information for Stream qa_mirror_qa1a created 2026-01-08 08:47:02
+
+                Replicas: 3
+                 Storage: File
+
+Options:
+
+               Retention: Limits
+         Acknowledgments: true
+          Discard Policy: Old
+        Duplicate Window: 0s
+    Allows Batch Publish: false
+         Allows Counters: false
+       Allows Msg Delete: true
+  Allows Per-Message TTL: false
+            Allows Purge: true
+        Allows Schedules: false
+          Allows Rollups: false
+
+Limits:
+
+        Maximum Messages: unlimited
+     Maximum Per Subject: unlimited
+           Maximum Bytes: unlimited
+             Maximum Age: unlimited
+    Maximum Message Size: unlimited
+       Maximum Consumers: unlimited
+
+Replication:
+
+                  Mirror: qa, API Prefix: nats://app:app@js1-qa1a:4222, Delivery Prefix: events.qa.qa1a
+
+Cluster Information:
+
+                    Name: qa1b
+           Cluster Group: S-R3F-POBeiqXI
+                  Leader: js2-qa1b
+                 Replica: js1-qa1b, current, seen 106µs ago
+                 Replica: js3-qa1b, current, seen 406µs ago
+
+Mirror Information:
+
+             Stream Name: qa
+                     Lag: 0
+               Last Seen: never
+         Ext. API Prefix: nats://app:app@js1-qa1a:4222
+    Ext. Delivery Prefix: events.qa.qa1a
+
+State:
+
+                Messages: 0
+                   Bytes: 0 B
+          First Sequence: 0
+           Last Sequence: 0
+        Active Consumers: 0"},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767862024000,"location":"setup-mirror.sh","message":"Source stream info","hypothesisId":"C","data":{"info":{
+  "config": {
+    "name": "qa",
+    "subjects": [
+      "events.qa.qa1a.\u003e"
+    ],
+    "retention": "limits",
+    "max_consumers": -1,
+    "max_msgs_per_subject": -1,
+    "max_msgs": -1,
+    "max_bytes": -1,
+    "max_age": 0,
+    "max_msg_size": -1,
+    "storage": "file",
+    "discard": "old",
+    "num_replicas": 3,
+    "duplicate_window": 120000000000,
+    "sealed": false,
+    "deny_delete": false,
+    "deny_purge": false,
+    "allow_rollup_hdrs": false,
+    "allow_direct": true,
+    "mirror_direct": false,
+    "consumer_limits": {}
+  },
+  "created": "2026-01-08T08:32:04.540163417Z",
+  "state": {
+    "messages": 20,
+    "bytes": 1551,
+    "first_seq": 1,
+    "first_ts": "2026-01-08T08:32:09.612825989Z",
+    "last_seq": 20,
+    "last_ts": "2026-01-08T08:32:14.093895588Z",
+    "num_subjects": 1,
+    "consumer_count": 0
+  },
+  "cluster": {
+    "name": "qa1a",
+    "raft_group": "S-R3F-cgGLcJeB",
+    "leader": "js3-qa1a",
+    "replicas": [
+      {
+        "name": "js1-qa1a",
+        "current": true,
+        "active": 166017049
+      },
+      {
+        "name": "js2-qa1a",
+        "current": true,
+        "active": 165590920
+      }
+    ]
+  },
+  "ts": "2026-01-08T08:47:04.77467301Z"
+}},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767862024000,"location":"setup-mirror.sh","message":"Mirror stream info","hypothesisId":"A","data":{"info":{
+  "config": {
+    "name": "qa_mirror_qa1a",
+    "retention": "limits",
+    "max_consumers": -1,
+    "max_msgs_per_subject": -1,
+    "max_msgs": -1,
+    "max_bytes": -1,
+    "max_age": 0,
+    "max_msg_size": -1,
+    "storage": "file",
+    "discard": "old",
+    "num_replicas": 3,
+    "mirror": {
+      "name": "qa",
+      "external": {
+        "api": "nats://app:app@js1-qa1a:4222",
+        "deliver": "events.qa.qa1a"
+      }
+    },
+    "sealed": false,
+    "deny_delete": false,
+    "deny_purge": false,
+    "allow_rollup_hdrs": false,
+    "allow_direct": false,
+    "mirror_direct": false,
+    "consumer_limits": {}
+  },
+  "created": "2026-01-08T08:47:02.558123231Z",
+  "state": {
+    "messages": 0,
+    "bytes": 0,
+    "first_seq": 0,
+    "first_ts": "0001-01-01T00:00:00Z",
+    "last_seq": 0,
+    "last_ts": "0001-01-01T00:00:00Z",
+    "consumer_count": 0
+  },
+  "cluster": {
+    "name": "qa1b",
+    "raft_group": "S-R3F-POBeiqXI",
+    "leader": "js2-qa1b",
+    "replicas": [
+      {
+        "name": "js1-qa1b",
+        "current": true,
+        "active": 334274281
+      },
+      {
+        "name": "js3-qa1b",
+        "current": true,
+        "active": 334275031
+      }
+    ]
+  },
+  "mirror": {
+    "name": "qa",
+    "external": {
+      "api": "nats://app:app@js1-qa1a:4222",
+      "deliver": "events.qa.qa1a"
+    },
+    "lag": 0,
+    "active": -1
+  },
+  "ts": "2026-01-08T08:47:04.958793654Z"
+}},"sessionId":"debug-session","runId":"run1"}
+{"timestamp":1767862025000,"location":"setup-mirror.sh","message":"NATS js1-qa1b logs","hypothesisId":"D","data":{"logs":"[1] 2026/01/08 08:31:58.888407 [INF] 10.89.2.8:51670 - rid:9 - Route connection created\n[1] 2026/01/08 08:31:58.893245 [INF] 10.89.2.9:43276 - rid:10 - Route connection created\n[1] 2026/01/08 08:31:58.893483 [INF] 10.89.2.9:43278 - rid:11 - Route connection created\n[1] 2026/01/08 08:31:58.894258 [INF] 10.89.2.9:6222 - rid:12 - Route connection created\n[1] 2026/01/08 08:31:58.952964 [INF] 10.89.2.9:6222 - rid:13 - Route connection created\n[1] 2026/01/08 08:31:58.959047 [INF] 10.89.2.8:51682 - rid:14 - Route connection created\n[1] 2026/01/08 08:31:58.970143 [INF] 10.89.2.9:43294 - rid:15 - Route connection created\n[1] 2026/01/08 08:31:58.970499 [INF] 10.89.2.9:43294 - rid:15 - Router connection closed: Client Closed\n[1] 2026/01/08 08:31:58.977028 [WRN] Waiting for routing to be established...\n[1] 2026/01/08 08:31:58.977064 [WRN] JetStream has not established contact with a meta leader\n[1] 2026/01/08 08:31:59.008970 [INF] 10.89.2.8:51696 - rid:16 - Route connection created\n[1] 2026/01/08 08:31:59.446165 [INF] JetStream cluster new metadata leader: js2-qa1b/qa1b\n[1] 2026/01/08 08:31:59.878974 [INF] 10.89.2.8:6222 - rid:17 - Route connection created\n[1] 2026/01/08 08:31:59.878974 [INF] 10.89.2.9:6222 - rid:19 - Route connection created\n[1] 2026/01/08 08:31:59.878979 [INF] 10.89.2.9:6222 - rid:18 - Route connection created\n[1] 2026/01/08 08:31:59.879068 [INF] 10.89.2.8:6222 - rid:20 - Route connection created\n[1] 2026/01/08 08:31:59.879468 [INF] 10.89.2.8:6222 - rid:17 - Router connection closed: Duplicate Route\n[1] 2026/01/08 08:31:59.879593 [INF] 10.89.2.9:6222 - rid:19 - Router connection closed: Duplicate Route\n[1] 2026/01/08 08:31:59.879644 [INF] 10.89.2.8:6222 - rid:20 - Router connection closed: Duplicate Route\n[1] 2026/01/08 08:31:59.879813 [INF] 10.89.2.9:6222 - rid:18 - Router connection closed: Duplicate Route\n"},"sessionId":"debug-session","runId":"run1"}

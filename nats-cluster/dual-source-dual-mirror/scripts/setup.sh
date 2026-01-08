@@ -16,8 +16,8 @@ ZONE_QA1A_SERVERS="nats://js1-qa1a:4222,nats://js2-qa1a:4222,nats://js3-qa1a:422
 ZONE_QA1B_SERVERS="nats://js1-qa1b:4222,nats://js2-qa1b:4222,nats://js3-qa1b:4222"
 
 # 容器内连接地址（用于 Mirror external API）
-ZONE_QA1A_CONTAINER="js1-qa1a:4222"
-ZONE_QA1B_CONTAINER="js1-qa1b:4222"
+ZONE_QA1A_CONTAINER=\$JS.zone-qa1a
+ZONE_QA1B_CONTAINER=\$JS.zone-qa1b
 
 # Stream 名称（使用 region_id）
 REGION_ID="qa"
@@ -28,6 +28,9 @@ MIRROR_QA1B_NAME="qa_mirror_qa1b"
 # Subject 模式
 SUBJECT_QA1A="events.qa.qa1a.>"
 SUBJECT_QA1B="events.qa.qa1b.>"
+# Deliver subject for mirror (without wildcards)
+DELIVER_QA1A="events.qa.qa1a"
+DELIVER_QA1B="events.qa.qa1b"
 
 echo -e "${GREEN}=== 双Source双Mirror验证方案 - Setup ===${NC}"
 
@@ -114,8 +117,8 @@ MIRROR_QA1B_CONFIG=$(cat <<EOF
   "mirror": {
     "name": "${SOURCE_STREAM_NAME}",
     "external": {
-      "api": "nats://${ZONE_QA1B_CONTAINER}",
-      "deliver": "${SUBJECT_QA1B}"
+      "api": "${ZONE_QA1B_CONTAINER}",
+      "deliver": "${DELIVER_QA1B}"
     }
   },
   "storage": "file",
@@ -135,7 +138,7 @@ EOF
 )
 
 # 通过stdin传递配置创建 Mirror Stream
-echo "$MIRROR_QA1B_CONFIG" | docker exec -i nats-box-qa1a nats --server "$ZONE_QA1A_SERVERS" stream add "$MIRROR_QA1B_NAME" --config /dev/stdin --defaults
+echo "$MIRROR_QA1B_CONFIG" | docker exec -i nats-box-qa1a nats --server "nats://app:app@js1-qa1a:4222" stream add "$MIRROR_QA1B_NAME" --config /dev/stdin --defaults
 
 echo -e "${GREEN}Zone qa1a Mirror Stream 创建成功${NC}"
 
@@ -150,8 +153,8 @@ MIRROR_QA1A_CONFIG=$(cat <<EOF
   "mirror": {
     "name": "${SOURCE_STREAM_NAME}",
     "external": {
-      "api": "nats://${ZONE_QA1A_CONTAINER}",
-      "deliver": "${SUBJECT_QA1A}"
+      "api": "${ZONE_QA1A_CONTAINER}",
+      "deliver": "${DELIVER_QA1A}"
     }
   },
   "storage": "file",
@@ -171,7 +174,7 @@ EOF
 )
 
 # 通过stdin传递配置创建 Mirror Stream
-echo "$MIRROR_QA1A_CONFIG" | docker exec -i nats-box-qa1b nats --server "$ZONE_QA1B_SERVERS" stream add "$MIRROR_QA1A_NAME" --config /dev/stdin --defaults
+echo "$MIRROR_QA1A_CONFIG" | docker exec -i nats-box-qa1b nats --server "nats://app:app@js1-qa1b:4222" stream add "$MIRROR_QA1A_NAME" --config /dev/stdin --defaults
 
 echo -e "${GREEN}Zone qa1b Mirror Stream 创建成功${NC}"
 

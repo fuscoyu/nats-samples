@@ -11,6 +11,7 @@ services:
       - "16232:4222"   # 客户端连接
       - "18232:8222"   # HTTP 监控
       - "17232:6222"   # 集群内部通信
+      - "19232:7222"   # Leafnode 通信
     logging:
       driver: "json-file"
       options:
@@ -28,6 +29,7 @@ services:
       - "16233:4222"
       - "18233:8222"
       - "17233:6222"
+      - "19233:7222"   # Leafnode 通信
     logging:
       driver: "json-file"
       options:
@@ -45,6 +47,7 @@ services:
       - "16234:4222"
       - "18234:8222"
       - "17234:6222"
+      - "19234:7222"   # Leafnode 通信
     logging:
       driver: "json-file"
       options:

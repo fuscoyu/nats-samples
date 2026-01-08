@@ -12,7 +12,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Zone qa1a 连接地址（容器内访问）
-ZONE_QA1A_SERVERS="nats://js1-qa1a:4222,nats://js2-qa1a:4222,nats://js3-qa1a:4222"
+ZONE_QA1A_SERVERS="nats://app:app@js1-qa1a:4222,nats://app:app@js2-qa1a:4222,nats://app:app@js3-qa1a:4222"
 
 # 使用 nats-box 容器运行 NATS CLI
 NATS_CMD="docker exec -i nats-box-qa1a nats"

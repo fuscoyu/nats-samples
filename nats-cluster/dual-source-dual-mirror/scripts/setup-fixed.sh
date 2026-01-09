@@ -16,8 +16,8 @@ ZONE_QA1A_SERVERS="nats://js1-qa1a:4222,nats://js2-qa1a:4222,nats://js3-qa1a:422
 ZONE_QA1B_SERVERS="nats://js1-qa1b:4222,nats://js2-qa1b:4222,nats://js3-qa1b:4222"
 
 # 容器内连接地址（用于 Mirror external API）
-ZONE_QA1A_CONTAINER=\$JS.zone-qa1a.API
-ZONE_QA1B_CONTAINER=\$JS.zone-qa1b.API
+ZONE_QA1A_CONTAINER="\$JS.ZONE-QA1A.API"
+ZONE_QA1B_CONTAINER="\$JS.ZONE-QA1B.API"
 
 # Stream 名称（使用 region_id）
 REGION_ID="qa"

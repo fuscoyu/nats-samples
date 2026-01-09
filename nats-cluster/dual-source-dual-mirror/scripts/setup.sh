@@ -15,9 +15,15 @@ NC='\033[0m' # No Color
 ZONE_QA1A_SERVERS="nats://js1-qa1a:4222,nats://js2-qa1a:4222,nats://js3-qa1a:4222"
 ZONE_QA1B_SERVERS="nats://js1-qa1b:4222,nats://js2-qa1b:4222,nats://js3-qa1b:4222"
 
+# 单节点连接地址（用于 Mirror external API）
+ZONE_QA1A_NODE="nats://js1-qa1a:4222"
+ZONE_QA1B_NODE="nats://js1-qa1b:4222"
+
 # 容器内连接地址（用于 Mirror external API）
-ZONE_QA1A_CONTAINER=\$JS.zone-qa1a
-ZONE_QA1B_CONTAINER=\$JS.zone-qa1b
+# JetStream domain 在配置中设置为 "zone-qa1a" 和 "zone-qa1b"
+# external.api 需要使用有效的 subject 格式: $JS.<domain>.API
+ZONE_QA1A_CONTAINER='$JS.zone-qa1a.API'
+ZONE_QA1B_CONTAINER='$JS.zone-qa1b.API'
 
 # Stream 名称（使用 region_id）
 REGION_ID="qa"
@@ -28,14 +34,11 @@ MIRROR_QA1B_NAME="qa_mirror_qa1b"
 # Subject 模式
 SUBJECT_QA1A="events.qa.qa1a.>"
 SUBJECT_QA1B="events.qa.qa1b.>"
-# Deliver subject for mirror (without wildcards)
-DELIVER_QA1A="events.qa.qa1a"
-DELIVER_QA1B="events.qa.qa1b"
+# Deliver subject for mirror (must be different from source subjects to avoid cycles)
+DELIVER_QA1A="mirror.qa1a"
+DELIVER_QA1B="mirror.qa1b"
 
 echo -e "${GREEN}=== 双Source双Mirror验证方案 - Setup ===${NC}"
-
-# 使用 nats-box 容器运行 NATS CLI
-NATS_CMD="docker exec -i nats-box-qa1a nats"
 
 # 检查 Docker 是否可用
 if ! command -v docker &> /dev/null; then
@@ -47,25 +50,50 @@ fi
 echo -e "${YELLOW}等待 Zone qa1a 和 Zone qa1b 启动...${NC}"
 sleep 5
 
-# 检查 Zone qa1a 连接（尝试列出streams来验证连接）
+# 在 nats-box-qa1a 中创建 context 保存认证凭据
+echo -e "${YELLOW}配置 nats-box-qa1a 认证...${NC}"
+docker exec -i nats-box-qa1a nats context save qa1a \
+    --server "$ZONE_QA1A_NODE" \
+    --user app \
+    --password app \
+    --description "Zone qa1a with app credentials"
+
+# 在 nats-box-qa1b 中创建 context 保存认证凭据
+echo -e "${YELLOW}配置 nats-box-qa1b 认证...${NC}"
+docker exec -i nats-box-qa1b nats context save qa1b \
+    --server "$ZONE_QA1B_NODE" \
+    --user app \
+    --password app \
+    --description "Zone qa1b with app credentials"
+
+# 检查 Zone qa1a 连接
 echo -e "${YELLOW}检查 Zone qa1a 连接...${NC}"
-if ! $NATS_CMD --server "$ZONE_QA1A_SERVERS" stream ls &> /dev/null; then
-    echo -e "${YELLOW}警告: 无法连接到 Zone qa1a，但继续尝试创建Stream...${NC}"
+if ! docker exec -i nats-box-qa1a nats --context qa1a stream ls &> /dev/null; then
+    echo -e "${RED}错误: 无法连接到 Zone qa1a${NC}"
+    exit 1
 else
     echo -e "${GREEN}Zone qa1a 连接正常${NC}"
 fi
 
 # 检查 Zone qa1b 连接
 echo -e "${YELLOW}检查 Zone qa1b 连接...${NC}"
-if ! $NATS_CMD --server "$ZONE_QA1B_SERVERS" stream ls &> /dev/null; then
-    echo -e "${YELLOW}警告: 无法连接到 Zone qa1b，但继续尝试创建Stream...${NC}"
+if ! docker exec -i nats-box-qa1b nats --context qa1b stream ls &> /dev/null; then
+    echo -e "${RED}错误: 无法连接到 Zone qa1b${NC}"
+    exit 1
 else
     echo -e "${GREEN}Zone qa1b 连接正常${NC}"
 fi
 
+# 清理已存在的 Stream（如果有）
+echo -e "${YELLOW}清理已存在的 Stream...${NC}"
+docker exec -i nats-box-qa1a nats stream rm "$SOURCE_STREAM_NAME" --context qa1a --force 2>/dev/null || true
+docker exec -i nats-box-qa1a nats stream rm "$MIRROR_QA1B_NAME" --context qa1a --force 2>/dev/null || true
+docker exec -i nats-box-qa1b nats stream rm "$SOURCE_STREAM_NAME" --context qa1b --force 2>/dev/null || true
+docker exec -i nats-box-qa1b nats stream rm "$MIRROR_QA1A_NAME" --context qa1b --force 2>/dev/null || true
+
 # 创建 Zone qa1a 的 Source Stream
 echo -e "${YELLOW}创建 Zone qa1a 的 Source Stream: ${SOURCE_STREAM_NAME}...${NC}"
-$NATS_CMD --server "$ZONE_QA1A_SERVERS" stream add "$SOURCE_STREAM_NAME" \
+docker exec -i nats-box-qa1a nats --context qa1a stream add "$SOURCE_STREAM_NAME" \
     --subjects "$SUBJECT_QA1A" \
     --storage file \
     --replicas 3 \
@@ -88,7 +116,7 @@ sleep 2
 
 # 创建 Zone qa1b 的 Source Stream
 echo -e "${YELLOW}创建 Zone qa1b 的 Source Stream: ${SOURCE_STREAM_NAME}...${NC}"
-$NATS_CMD --server "$ZONE_QA1B_SERVERS" stream add "$SOURCE_STREAM_NAME" \
+docker exec -i nats-box-qa1b nats --context qa1b stream add "$SOURCE_STREAM_NAME" \
     --subjects "$SUBJECT_QA1B" \
     --storage file \
     --replicas 3 \
@@ -111,14 +139,14 @@ sleep 2
 
 # 创建 Zone qa1a 的 Mirror Stream (镜像 Zone qa1b 的 Source Stream)
 echo -e "${YELLOW}创建 Zone qa1a 的 Mirror Stream: ${MIRROR_QA1B_NAME} (镜像 Zone qa1b 的 Source Stream)...${NC}"
-MIRROR_QA1B_CONFIG=$(cat <<EOF
+
+cat > /tmp/mirror_qa1b_config.json << HEREDOC
 {
   "name": "${MIRROR_QA1B_NAME}",
   "mirror": {
     "name": "${SOURCE_STREAM_NAME}",
     "external": {
-      "api": "${ZONE_QA1B_CONTAINER}",
-      "deliver": "${DELIVER_QA1B}"
+      "api": "\$JS.zone-qa1b.API"
     }
   },
   "storage": "file",
@@ -134,11 +162,11 @@ MIRROR_QA1B_CONFIG=$(cat <<EOF
   "deny_delete": false,
   "deny_purge": false
 }
-EOF
-)
+HEREDOC
 
-# 通过stdin传递配置创建 Mirror Stream
-echo "$MIRROR_QA1B_CONFIG" | docker exec -i nats-box-qa1a nats --server "nats://app:app@js1-qa1a:4222" stream add "$MIRROR_QA1B_NAME" --config /dev/stdin --defaults
+docker cp /tmp/mirror_qa1b_config.json nats-box-qa1a:/tmp/mirror_config.json
+docker exec -i nats-box-qa1a nats stream add "$MIRROR_QA1B_NAME" --context qa1a --config /tmp/mirror_config.json 2>&1
+rm -f /tmp/mirror_qa1b_config.json
 
 echo -e "${GREEN}Zone qa1a Mirror Stream 创建成功${NC}"
 
@@ -147,14 +175,14 @@ sleep 2
 
 # 创建 Zone qa1b 的 Mirror Stream (镜像 Zone qa1a 的 Source Stream)
 echo -e "${YELLOW}创建 Zone qa1b 的 Mirror Stream: ${MIRROR_QA1A_NAME} (镜像 Zone qa1a 的 Source Stream)...${NC}"
-MIRROR_QA1A_CONFIG=$(cat <<EOF
+
+cat > /tmp/mirror_qa1a_config.json << HEREDOC
 {
   "name": "${MIRROR_QA1A_NAME}",
   "mirror": {
     "name": "${SOURCE_STREAM_NAME}",
     "external": {
-      "api": "${ZONE_QA1A_CONTAINER}",
-      "deliver": "${DELIVER_QA1A}"
+      "api": "\$JS.zone-qa1a.API"
     }
   },
   "storage": "file",
@@ -170,11 +198,11 @@ MIRROR_QA1A_CONFIG=$(cat <<EOF
   "deny_delete": false,
   "deny_purge": false
 }
-EOF
-)
+HEREDOC
 
-# 通过stdin传递配置创建 Mirror Stream
-echo "$MIRROR_QA1A_CONFIG" | docker exec -i nats-box-qa1b nats --server "nats://app:app@js1-qa1b:4222" stream add "$MIRROR_QA1A_NAME" --config /dev/stdin --defaults
+docker cp /tmp/mirror_qa1a_config.json nats-box-qa1b:/tmp/mirror_config.json
+docker exec -i nats-box-qa1b nats stream add "$MIRROR_QA1A_NAME" --context qa1b --config /tmp/mirror_config.json 2>&1
+rm -f /tmp/mirror_qa1a_config.json
 
 echo -e "${GREEN}Zone qa1b Mirror Stream 创建成功${NC}"
 
@@ -185,16 +213,16 @@ sleep 3
 # 显示 Stream 信息
 echo -e "${GREEN}=== Stream 信息 ===${NC}"
 echo -e "${YELLOW}Zone qa1a Source Stream (${SOURCE_STREAM_NAME}):${NC}"
-$NATS_CMD --server "$ZONE_QA1A_SERVERS" stream info "$SOURCE_STREAM_NAME" || echo "Stream 不存在或未就绪"
+docker exec -i nats-box-qa1a nats --context qa1a stream info "$SOURCE_STREAM_NAME" || echo "Stream 不存在或未就绪"
 
 echo -e "${YELLOW}Zone qa1a Mirror Stream (${MIRROR_QA1B_NAME}):${NC}"
-$NATS_CMD --server "$ZONE_QA1A_SERVERS" stream info "$MIRROR_QA1B_NAME" || echo "Stream 不存在或未就绪"
+docker exec -i nats-box-qa1a nats --context qa1a stream info "$MIRROR_QA1B_NAME" || echo "Stream 不存在或未就绪"
 
 echo -e "${YELLOW}Zone qa1b Source Stream (${SOURCE_STREAM_NAME}):${NC}"
-$NATS_CMD --server "$ZONE_QA1B_SERVERS" stream info "$SOURCE_STREAM_NAME" || echo "Stream 不存在或未就绪"
+docker exec -i nats-box-qa1b nats --context qa1b stream info "$SOURCE_STREAM_NAME" || echo "Stream 不存在或未就绪"
 
 echo -e "${YELLOW}Zone qa1b Mirror Stream (${MIRROR_QA1A_NAME}):${NC}"
-$NATS_CMD --server "$ZONE_QA1B_SERVERS" stream info "$MIRROR_QA1A_NAME" || echo "Stream 不存在或未就绪"
+docker exec -i nats-box-qa1b nats --context qa1b stream info "$MIRROR_QA1A_NAME" || echo "Stream 不存在或未就绪"
 
 echo -e "${GREEN}=== Setup 完成 ===${NC}"
 
@@ -203,9 +231,9 @@ echo -e "${GREEN}=== Mirror 同步状态验证 ===${NC}"
 sleep 2
 
 echo -e "${YELLOW}Zone qa1a -> Zone qa1b Mirror 同步状态:${NC}"
-$NATS_CMD --server "$ZONE_QA1B_SERVERS" stream info "$MIRROR_QA1A_NAME" 2>&1 || echo "Mirror 不存在或无法访问"
+docker exec -i nats-box-qa1b nats --context qa1b stream info "$MIRROR_QA1A_NAME" 2>&1 || echo "Mirror 不存在或无法访问"
 
 echo -e "${YELLOW}Zone qa1b -> Zone qa1a Mirror 同步状态:${NC}"
-$NATS_CMD --server "$ZONE_QA1A_SERVERS" stream info "$MIRROR_QA1B_NAME" 2>&1 || echo "Mirror 不存在或无法访问"
+docker exec -i nats-box-qa1a nats --context qa1a stream info "$MIRROR_QA1B_NAME" 2>&1 || echo "Mirror 不存在或无法访问"
 
 echo -e "${GREEN}=== 验证完成 ===${NC}"
